@@ -1,0 +1,20 @@
+# Gradle
+*.iml
+.gradle
+/build
+**/build/
+.externalNativeBuild
+app/.cxx/
+/captures
+
+# IDE
+.idea/
+*.DS_Store
+
+# Build outputs
+Release/
+*.apk
+*.aab
+
+# Kotlin metadata
+.kotlin/

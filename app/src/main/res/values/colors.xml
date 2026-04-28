@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+    <color name="floating_window_backgrouns">#80000000</color>
+    <color name="cpu_main">#FFFF00</color>
+    <color name="cpu_sub">#C0FFFF00</color>
+    <color name="gpu_main">#00FF00</color>
+    <color name="temp_main">#00AAFF</color>
+    <color name="temp_hot">#FF3333</color>
+    <color name="waveform_grid">#33FFFFFF</color>
+    <color name="waveform_text">#CCFFFFFF</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
+</resources>

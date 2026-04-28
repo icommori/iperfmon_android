@@ -1,0 +1,85 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace = 'xzr.perfmon'
+    compileSdk = 35
+
+    defaultConfig {
+        applicationId "com.innocomm.perfmon"
+        minSdkVersion 24
+        targetSdkVersion 35
+        versionCode 1
+        versionName "1.0.0.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "iPerfmon_${defaultConfig.versionName}_${variant.name}.apk"
+        }
+    }
+
+    signingConfigs {
+
+        create("releaseAndDefault") {
+            storeFile = file("../androidDefault.jks")
+            storePassword = "innocomm"
+            keyAlias = "innocomm"
+            keyPassword = "innocomm"
+            enableV1Signing = true
+            enableV2Signing = true
+        }
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig = signingConfigs.getByName("releaseAndDefault")
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig = signingConfigs.getByName("releaseAndDefault")
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = 17
+    }
+    flavorDimensions "uid"
+    productFlavors {
+
+        system {
+            dimension "uid"
+            applicationId "com.innocomm.perfmon"
+            resValue "string", "app_name", "iPerFMon-Sys"
+            manifestPlaceholders = [
+                    SHARED_UID: "android.uid.system"
+            ]
+        }
+
+        normal {
+            dimension "uid"
+            applicationId "com.innocomm.perfmon.normal"
+            resValue "string", "app_name", "iPerFMon"
+            manifestPlaceholders = [
+                    SHARED_UID: ""
+            ]
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'com.google.zxing:core:3.5.3'
+}
