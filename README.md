@@ -46,6 +46,30 @@ adb shell setenforce 0
 adb shell chmod 644 /sys/kernel/ged/hal/gpu_utilization
 ```
 
+## Stress Testing with Multi-Window Video Player
+
+The built-in video player is designed as a **hardware stress test tool**. Playing multiple simultaneous video windows drives up CPU decoder load, GPU rendering, and heat dissipation — all observable in real time on the monitor panel.
+
+### How to run a stress test
+
+1. Place one or more `.mp4` test clips under `app/src/main/assets/video/` before building.
+2. Install the APK and launch the overlay.
+3. Tap the **▶ (play)** button — the first video window appears automatically.
+4. Tap **＋** on any video window to add another; repeat until the desired load is reached.
+5. Switch to **GRAPH mode** (waveform button) to watch CPU, GPU, and temperature curves climb in real time.
+6. Resize individual windows with the corner handle to adjust decoder resolution and GPU fill rate.
+7. Tap **✕** on a window to remove it, or tap the **play button again** to close all windows and stop the test.
+
+### What to observe
+
+| Metric | Expected behaviour under load |
+|--------|-------------------------------|
+| CPU per-core | Decoder threads saturate one or more cores |
+| GPU % & frequency | GPU scales up as more windows are rendered |
+| Temperature | Rises steadily; waveform line turns red above 65 °C |
+
+> **Tip:** Use portrait orientation to stack videos vertically for a compact multi-window view, or landscape to spread them to the right of the panel.
+
 ## Architecture
 
 ```
