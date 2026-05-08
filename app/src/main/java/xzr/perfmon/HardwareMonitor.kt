@@ -22,6 +22,17 @@ data class CpuCoreStat(
 data class CpuStats(val total: Int, val perCore: Map<Int, Int>)
 
 class HardwareMonitor {
+    fun isEnvironmentReady(): Boolean {
+        val gpuFile = File("/sys/kernel/ged/hal/gpu_utilization")
+        val apuFile = File("/proc/interrupts")
+        val cpuFile = File("/proc/stat")
+
+        val gpuReady = gpuFile.exists() && gpuFile.canRead()
+        val apuReady = apuFile.exists() && apuFile.canRead()
+        val cpuReady = cpuFile.exists() && cpuFile.canRead()
+
+        return gpuReady && apuReady && cpuReady
+    }
 
     // ── CPU ──────────────────────────────────────────────────────────────────
     private var lastTotal: Long = 0

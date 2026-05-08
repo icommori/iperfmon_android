@@ -3,6 +3,7 @@ package xzr.perfmon;
 import static xzr.perfmon.WaveformView.MAX_TEMP;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -70,6 +71,27 @@ public class FloatingWindow extends Service {
     LinearLayout textContainer;
     WaveformView waveView;
     TextView tvTempLegend;
+
+    private static boolean hasShownRootHintDialog = false;
+
+    private void showRootHintDialogIfNeeded() {
+        if (hasShownRootHintDialog) return;
+        if (!hardwareMonitor.isEnvironmentReady()) {
+            hasShownRootHintDialog = true;
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.dialog_root_hint_title)
+                    .setMessage(R.string.dialog_root_hint_message)
+                    .setPositiveButton(R.string.action_ok, null)
+                    .create();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+            } else {
+                dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            }
+            dialog.show();
+        }
+    }
 
     class VideoSession {
         View rootView;
@@ -628,7 +650,7 @@ public class FloatingWindow extends Service {
     }
 
     void monitorInit() {
-
+        showRootHintDialogIfNeeded();
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.bottomMargin = 2; // 給每一行一點點間距，避免文字邊緣重疊
         line = new TextView[linen];

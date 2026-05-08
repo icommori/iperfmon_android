@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">iPerfMon</string>
+    <string name="dialog_root_hint_title">System Permission Hint</string>
+    <string name="dialog_root_hint_message">Unable to read critical hardware monitoring data (e.g., GPU load or APU IPS).\n\nReason: Android system restricts third-party apps from accessing low-level nodes by default.\n\nSolution: Please execute the following ADB commands via a computer to lift the restrictions:\n\nadb root\nadb shell setenforce 0\nadb shell chmod 644 /sys/kernel/ged/hal/gpu_utilization</string>
+    <string name="action_ok">OK</string>
 </resources>
