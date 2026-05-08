@@ -241,6 +241,48 @@ class HardwareMonitor {
             ?: emptyList()
     }
 
+    // ── APU IPS ─────────────────────────────────────────────────────────────
+    private var lastApuIpi = 0L
+    private var lastSampleTime = 0L
+    private var lastIpsRaw = 0.0
+
+    fun getApuIpsRaw(): Int {
+        val currentIpi = try {
+            var total = 0L
+            File("/proc/interrupts").useLines { lines ->
+                lines.forEach { line ->
+                    if (line.contains("apu_ipi")) {
+                        val numbers = "\\d+".toRegex().findAll(line).map { it.value.toLong() }.toList()
+                        if (numbers.size > 1) {
+                            total = numbers.drop(1).sum()
+                        }
+                    }
+                }
+            }
+            total
+        } catch (e: Exception) {
+            -1L
+        }
+
+        val currentTime = SystemClock.elapsedRealtime()
+        if (currentIpi < 0) return lastIpsRaw.toInt()
+
+        if (lastApuIpi == 0L || currentTime <= lastSampleTime) {
+            lastApuIpi = currentIpi
+            lastSampleTime = currentTime
+            return 0
+        }
+
+        val timeDiffMs = currentTime - lastSampleTime
+        val ipiDiff = currentIpi - lastApuIpi
+
+        lastApuIpi = currentIpi
+        lastSampleTime = currentTime
+
+        lastIpsRaw = (ipiDiff.toDouble() / timeDiffMs) * 1000.0
+        return lastIpsRaw.toInt()
+    }
+
     // ── GPU Debug（只跑一次）─────────────────────────────────────────────────
     private fun debugGpuPathsOnce() {
         if (gpuDebugDone) return

@@ -433,7 +433,7 @@ public class FloatingWindow extends Service {
         // 獲取當前 CPU 核心數
         int cpuCount = Runtime.getRuntime().availableProcessors();
         linen = 0;
-        linen += 3;
+        linen += 4; // CPU Total, GPU, Temp, IPS
         linen += cpuCount;
 
         // 視窗參數設定
@@ -700,6 +700,14 @@ public class FloatingWindow extends Service {
         if (currentIndex < linen) {
             line[currentIndex].setText("Temp: " + String.format("%.1f", temp) + " ℃");
             line[currentIndex].setTextColor(getResources().getColor(R.color.temp_main));
+            currentIndex++;
+        }
+
+        // 4. 讀取並顯示 APU IPS
+        int ips = hardwareMonitor.getApuIpsRaw();
+        if (currentIndex < linen) {
+            line[currentIndex].setText("APU IPS: " + ips);
+            line[currentIndex].setTextColor(getResources().getColor(R.color.apu_ips));
             currentIndex++;
         }
         // ===== Legend TEMP 顏色同步 =====
